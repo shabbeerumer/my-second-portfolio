@@ -329,11 +329,13 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
         justify-items: center;
-        padding: 20px;
+        padding: 15px;
+        margin: 0 auto;
+        max-width: 100%;
     }
 
     .skill-circle {
-        width: 140px;
+        width: 100%;
         height: auto;
         margin: 0;
         display: flex;
@@ -343,25 +345,22 @@
     }
 
     .circle-wrapper {
-        width: 120px;
-        height: 120px;
+        width: 100px;
+        height: 100px;
         position: relative;
         margin-bottom: 15px;
-    }
-
-    .circle-progress {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.3);
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
+    }
+
+    .circle-progress {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .circle-inner {
@@ -450,52 +449,46 @@
 @media (max-width: 480px) {
     .skills-overview {
         grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        padding: 15px;
-        margin-top: 20px;
+        gap: 10px;
+        padding: 10px;
+        margin-top: 15px;
     }
 
     .skill-circle {
-        width: 120px;
-        height: 120px;
+        width: 100%;
+        max-width: 120px;
     }
 
     .circle-wrapper {
-        width: 100%;
-        height: 100%;
-        max-width: 100px;
-        max-height: 100px;
+        width: 80px;
+        height: 80px;
         margin: 0 auto 10px;
     }
 
     .circle-inner i {
-        font-size: 20px;
+        font-size: 16px;
+        margin-bottom: 2px;
     }
 
     .circle-inner .percentage {
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .skill-label {
         font-size: 12px;
+        white-space: nowrap;
     }
 
     /* Fix for smaller phones */
     @media (max-width: 350px) {
         .skills-overview {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
             justify-items: center;
         }
 
         .skill-circle {
-            width: 140px;
-            height: 140px;
-            margin-bottom: 25px;
-        }
-
-        .circle-wrapper {
-            max-width: 120px;
-            max-height: 120px;
+            width: 100%;
+            margin-bottom: 15px;
         }
     }
 }

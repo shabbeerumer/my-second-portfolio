@@ -9,12 +9,35 @@ AOS.init({
 const animateCircularProgress = () => {
     const circles = document.querySelectorAll('.skill-circle');
 
-    // Check for mobile view
+    // Check for mobile view - create more granular breakpoints
     const isMobile = window.innerWidth <= 768;
+    const isSmallMobile = window.innerWidth <= 480;
+    const isVerySmallMobile = window.innerWidth <= 350;
+
+    // Determine appropriate radius based on screen size
+    let circleRadius, svgSize, strokeWidth;
+
+    if (isVerySmallMobile) {
+        circleRadius = 30;
+        svgSize = 70;
+        strokeWidth = 4;
+    } else if (isSmallMobile) {
+        circleRadius = 35;
+        svgSize = 80;
+        strokeWidth = 5;
+    } else if (isMobile) {
+        circleRadius = 40;
+        svgSize = 90;
+        strokeWidth = 6;
+    } else {
+        circleRadius = 50;
+        svgSize = 120;
+        strokeWidth = 8;
+    }
 
     circles.forEach(circle => {
         const percentage = circle.getAttribute('data-percentage');
-        const circumference = 2 * Math.PI * (isMobile ? 40 : 50); // smaller radius on mobile
+        const circumference = 2 * Math.PI * circleRadius;
         const offset = circumference - (percentage / 100) * circumference;
 
         // Create SVG circle if it doesn't exist
@@ -22,8 +45,6 @@ const animateCircularProgress = () => {
             const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             const path = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
-            const svgSize = isMobile ? 100 : 120;
-            const circleRadius = isMobile ? 40 : 50;
             const centerPoint = svgSize / 2;
 
             svg.setAttribute('width', svgSize);
@@ -39,7 +60,7 @@ const animateCircularProgress = () => {
             path.setAttribute('r', circleRadius);
             path.setAttribute('fill', 'none');
             path.setAttribute('stroke', 'white');
-            path.setAttribute('stroke-width', isMobile ? 6 : 8);
+            path.setAttribute('stroke-width', strokeWidth);
             path.style.strokeDasharray = circumference;
             path.style.strokeDashoffset = circumference;
             path.style.transition = 'stroke-dashoffset 1s ease';
@@ -189,6 +210,8 @@ const initRevealAnimation = () => {
 
 // Initialize all animations and interactions
 document.addEventListener('DOMContentLoaded', () => {
+    // Initial animation
+    animateCircularProgress();
     observeProgress();
     initSkillCards();
     initToolCards();
@@ -197,5 +220,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initRevealAnimation();
 
     // Handle window resize for responsiveness
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', () => {
+        // Debounce resize events
+        clearTimeout(window.resizeTimer);
+        window.resizeTimer = setTimeout(() => {
+            handleResize();
+        }, 250);
+    });
 }); 
