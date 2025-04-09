@@ -369,6 +369,36 @@ textarea.form-control {
 @media (max-width: 768px) {
     .contact-stats {
         flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .stat-item {
+        width: 100%;
+        max-width: 280px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 25px 20px;
+    }
+
+    .stat-icon {
+        margin: 0 auto 15px;
+    }
+
+    .stat-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .stat-content h4 {
+        text-align: center;
+    }
+
+    .stat-content p {
+        text-align: center;
     }
 
     .contact-form-wrapper {
@@ -377,6 +407,41 @@ textarea.form-control {
 
     .info-card {
         padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .info-icon {
+        margin: 0 auto 15px;
+    }
+
+    .social-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .social-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 20px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .social-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .form-submit button {
+        width: 100%;
     }
 }
 

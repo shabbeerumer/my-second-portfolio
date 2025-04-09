@@ -5,6 +5,11 @@ AOS.init({
     once: true
 });
 
+// Check if device is touch-enabled
+const isTouchDevice = () => {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+};
+
 // Contact Form Handling
 const initContactForm = () => {
     const form = document.getElementById('contact-form');
@@ -86,34 +91,52 @@ const initContactForm = () => {
 const initInfoCards = () => {
     const cards = document.querySelectorAll('.info-card');
 
-    cards.forEach(card => {
-        const icon = card.querySelector('.info-icon');
+    // Only add hover effects on non-touch devices
+    if (!isTouchDevice()) {
+        cards.forEach(card => {
+            const icon = card.querySelector('.info-icon');
 
-        card.addEventListener('mouseenter', () => {
-            icon.style.transform = 'rotateY(180deg)';
-        });
+            card.addEventListener('mouseenter', () => {
+                icon.style.transform = 'rotateY(180deg)';
+            });
 
-        card.addEventListener('mouseleave', () => {
-            icon.style.transform = 'rotateY(0)';
+            card.addEventListener('mouseleave', () => {
+                icon.style.transform = 'rotateY(0)';
+            });
         });
-    });
+    } else {
+        // For touch devices, add a small animation on click
+        cards.forEach(card => {
+            const icon = card.querySelector('.info-icon');
+
+            card.addEventListener('click', () => {
+                icon.style.transform = 'rotateY(180deg)';
+                setTimeout(() => {
+                    icon.style.transform = 'rotateY(0)';
+                }, 500);
+            });
+        });
+    }
 };
 
 // Social Card Animation
 const initSocialCards = () => {
     const cards = document.querySelectorAll('.social-card');
 
-    cards.forEach(card => {
-        const icon = card.querySelector('.social-icon');
+    // Only add hover effects on non-touch devices
+    if (!isTouchDevice()) {
+        cards.forEach(card => {
+            const icon = card.querySelector('.social-icon');
 
-        card.addEventListener('mouseenter', () => {
-            icon.style.transform = 'rotateY(180deg)';
-        });
+            card.addEventListener('mouseenter', () => {
+                icon.style.transform = 'rotateY(180deg)';
+            });
 
-        card.addEventListener('mouseleave', () => {
-            icon.style.transform = 'rotateY(0)';
+            card.addEventListener('mouseleave', () => {
+                icon.style.transform = 'rotateY(0)';
+            });
         });
-    });
+    }
 };
 
 // Notification System
@@ -152,6 +175,12 @@ const initSmoothScroll = () => {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
+                // Close mobile menu if open
+                const navbarCollapse = document.querySelector('.navbar-collapse');
+                if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                    document.querySelector('.navbar-toggler').click();
+                }
+
                 target.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
@@ -163,28 +192,51 @@ const initSmoothScroll = () => {
 
 // Parallax Effect for Hero Section
 const initParallax = () => {
-    const hero = document.querySelector('.contact-hero');
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        hero.style.backgroundPositionY = scrolled * 0.5 + 'px';
-    });
+    // Only apply parallax on non-mobile devices for performance
+    if (window.innerWidth > 768 && !isTouchDevice()) {
+        const hero = document.querySelector('.contact-hero');
+        if (hero) {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                hero.style.backgroundPositionY = scrolled * 0.5 + 'px';
+            });
+        }
+    }
 };
 
 // Stats Animation
 const initStatsAnimation = () => {
     const stats = document.querySelectorAll('.stat-item');
 
-    stats.forEach(stat => {
-        const icon = stat.querySelector('.stat-icon');
+    // Only add hover effects on non-touch devices
+    if (!isTouchDevice()) {
+        stats.forEach(stat => {
+            const icon = stat.querySelector('.stat-icon');
 
-        stat.addEventListener('mouseenter', () => {
-            icon.style.transform = 'rotateY(180deg)';
-        });
+            stat.addEventListener('mouseenter', () => {
+                icon.style.transform = 'rotateY(180deg)';
+            });
 
-        stat.addEventListener('mouseleave', () => {
-            icon.style.transform = 'rotateY(0)';
+            stat.addEventListener('mouseleave', () => {
+                icon.style.transform = 'rotateY(0)';
+            });
         });
-    });
+    }
+};
+
+// Handle viewport resize
+const handleResize = () => {
+    // Reinitialize any size-dependent features
+    if (window.innerWidth <= 768) {
+        // Mobile specific adjustments
+        document.querySelectorAll('.stat-item, .info-card, .social-card').forEach(item => {
+            item.classList.add('mobile-optimized');
+        });
+    } else {
+        document.querySelectorAll('.mobile-optimized').forEach(item => {
+            item.classList.remove('mobile-optimized');
+        });
+    }
 };
 
 // Initialize all features when DOM is loaded
@@ -195,4 +247,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initParallax();
     initStatsAnimation();
+
+    // Call once at start
+    handleResize();
+
+    // Listen for window resize
+    window.addEventListener('resize', handleResize);
 }); 

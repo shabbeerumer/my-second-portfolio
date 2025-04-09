@@ -9,9 +9,12 @@ AOS.init({
 const animateCircularProgress = () => {
     const circles = document.querySelectorAll('.skill-circle');
 
+    // Check for mobile view
+    const isMobile = window.innerWidth <= 768;
+
     circles.forEach(circle => {
         const percentage = circle.getAttribute('data-percentage');
-        const circumference = 2 * Math.PI * 50; // radius = 50
+        const circumference = 2 * Math.PI * (isMobile ? 40 : 50); // smaller radius on mobile
         const offset = circumference - (percentage / 100) * circumference;
 
         // Create SVG circle if it doesn't exist
@@ -19,19 +22,24 @@ const animateCircularProgress = () => {
             const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             const path = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
-            svg.setAttribute('width', '120');
-            svg.setAttribute('height', '120');
+            const svgSize = isMobile ? 100 : 120;
+            const circleRadius = isMobile ? 40 : 50;
+            const centerPoint = svgSize / 2;
+
+            svg.setAttribute('width', svgSize);
+            svg.setAttribute('height', svgSize);
             svg.style.position = 'absolute';
             svg.style.top = '0';
             svg.style.left = '0';
             svg.style.transform = 'rotate(-90deg)';
+            svg.style.zIndex = '2';
 
-            path.setAttribute('cx', '60');
-            path.setAttribute('cy', '60');
-            path.setAttribute('r', '50');
+            path.setAttribute('cx', centerPoint);
+            path.setAttribute('cy', centerPoint);
+            path.setAttribute('r', circleRadius);
             path.setAttribute('fill', 'none');
             path.setAttribute('stroke', 'white');
-            path.setAttribute('stroke-width', '8');
+            path.setAttribute('stroke-width', isMobile ? 6 : 8);
             path.style.strokeDasharray = circumference;
             path.style.strokeDashoffset = circumference;
             path.style.transition = 'stroke-dashoffset 1s ease';
@@ -45,6 +53,17 @@ const animateCircularProgress = () => {
             }, 100);
         }
     });
+};
+
+// Handle resize events for responsive behavior
+const handleResize = () => {
+    // Remove existing SVGs
+    document.querySelectorAll('.circle-progress svg').forEach(svg => {
+        svg.remove();
+    });
+
+    // Re-initialize with correct sizes
+    animateCircularProgress();
 };
 
 // Linear Progress Bar Animation
@@ -83,34 +102,40 @@ const observeProgress = () => {
 const initSkillCards = () => {
     const cards = document.querySelectorAll('.skill-card');
 
-    cards.forEach(card => {
-        const icon = card.querySelector('.skill-icon');
+    // Only apply hover effects on non-touch devices
+    if (!('ontouchstart' in window)) {
+        cards.forEach(card => {
+            const icon = card.querySelector('.skill-icon');
 
-        card.addEventListener('mouseenter', () => {
-            icon.style.transform = 'rotateY(180deg)';
-        });
+            card.addEventListener('mouseenter', () => {
+                icon.style.transform = 'rotateY(180deg)';
+            });
 
-        card.addEventListener('mouseleave', () => {
-            icon.style.transform = 'rotateY(0)';
+            card.addEventListener('mouseleave', () => {
+                icon.style.transform = 'rotateY(0)';
+            });
         });
-    });
+    }
 };
 
 // Tool Card Animation
 const initToolCards = () => {
     const cards = document.querySelectorAll('.tool-card');
 
-    cards.forEach(card => {
-        const icon = card.querySelector('.tool-icon');
+    // Only apply hover effects on non-touch devices
+    if (!('ontouchstart' in window)) {
+        cards.forEach(card => {
+            const icon = card.querySelector('.tool-icon');
 
-        card.addEventListener('mouseenter', () => {
-            icon.style.transform = 'rotateY(180deg) scale(1.1)';
-        });
+            card.addEventListener('mouseenter', () => {
+                icon.style.transform = 'rotateY(180deg) scale(1.1)';
+            });
 
-        card.addEventListener('mouseleave', () => {
-            icon.style.transform = 'rotateY(0) scale(1)';
+            card.addEventListener('mouseleave', () => {
+                icon.style.transform = 'rotateY(0) scale(1)';
+            });
         });
-    });
+    }
 };
 
 // Smooth Scrolling
@@ -120,6 +145,12 @@ const initSmoothScroll = () => {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
+                // Close mobile menu if open
+                const navbarCollapse = document.querySelector('.navbar-collapse');
+                if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                    document.querySelector('.navbar-toggler').click();
+                }
+
                 target.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
@@ -131,11 +162,14 @@ const initSmoothScroll = () => {
 
 // Parallax Effect for Hero Section
 const initParallax = () => {
-    const hero = document.querySelector('.skills-hero');
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        hero.style.backgroundPositionY = scrolled * 0.5 + 'px';
-    });
+    // Only apply parallax on non-mobile devices for performance
+    if (window.innerWidth > 768) {
+        const hero = document.querySelector('.skills-hero');
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            hero.style.backgroundPositionY = scrolled * 0.5 + 'px';
+        });
+    }
 };
 
 // Reveal Animation on Scroll
@@ -161,4 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSmoothScroll();
     initParallax();
     initRevealAnimation();
+
+    // Handle window resize for responsiveness
+    window.addEventListener('resize', handleResize);
 }); 

@@ -334,14 +334,19 @@
 
     .skill-circle {
         width: 140px;
-        height: 140px;
+        height: auto;
         margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
     }
 
     .circle-wrapper {
-        width: 100%;
-        height: 100%;
+        width: 120px;
+        height: 120px;
         position: relative;
+        margin-bottom: 15px;
     }
 
     .circle-progress {
@@ -350,6 +355,13 @@
         position: absolute;
         top: 0;
         left: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
     }
 
     .circle-inner {
@@ -359,17 +371,20 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: var(--card-bg);
+        background: rgba(25, 25, 40, 0.8);
         border-radius: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 5px;
+        z-index: 3;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     }
 
     .circle-inner i {
         font-size: 24px;
+        margin-bottom: 5px;
     }
 
     .circle-inner .percentage {
@@ -379,17 +394,22 @@
     .skill-label {
         margin-top: 10px;
         font-size: 14px;
+        text-align: center;
     }
 
     .skill-glow {
         position: absolute;
-        width: 100%;
-        height: 100%;
+        width: 140%;
+        height: 140%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         border-radius: 50%;
-        background: var(--gradient-1);
-        opacity: 0.2;
+        background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3), transparent 70%);
         filter: blur(10px);
-        z-index: -1;
+        opacity: 0.5;
+        z-index: 1;
+        animation: glowPulse 2s ease-in-out infinite;
     }
 
     .circle-progress::before {
@@ -398,8 +418,11 @@
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        border: 2px solid var(--gradient-1);
+        border: 2px solid transparent;
+        border-top-color: rgba(255, 255, 255, 0.8);
+        border-right-color: rgba(255, 255, 255, 0.4);
         animation: rotate 2s linear infinite;
+        z-index: 2;
     }
 
     .circle-progress::after {
@@ -408,9 +431,9 @@
         width: calc(100% - 4px);
         height: calc(100% - 4px);
         border-radius: 50%;
-        background: var(--dark-color);
         top: 2px;
         left: 2px;
+        z-index: 1;
     }
 
     @keyframes rotate {
@@ -429,11 +452,20 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
         padding: 15px;
+        margin-top: 20px;
     }
 
     .skill-circle {
         width: 120px;
         height: 120px;
+    }
+
+    .circle-wrapper {
+        width: 100%;
+        height: 100%;
+        max-width: 100px;
+        max-height: 100px;
+        margin: 0 auto 10px;
     }
 
     .circle-inner i {
@@ -446,6 +478,25 @@
 
     .skill-label {
         font-size: 12px;
+    }
+
+    /* Fix for smaller phones */
+    @media (max-width: 350px) {
+        .skills-overview {
+            grid-template-columns: 1fr;
+            justify-items: center;
+        }
+
+        .skill-circle {
+            width: 140px;
+            height: 140px;
+            margin-bottom: 25px;
+        }
+
+        .circle-wrapper {
+            max-width: 120px;
+            max-height: 120px;
+        }
     }
 }
 
